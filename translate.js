@@ -1,3 +1,6 @@
+require('dotenv').config();
+const { TranslationServiceClient } = require('@google-cloud/translate');
+
 const LANGUAGES = [
   {
     label: "english",
@@ -17,19 +20,23 @@ const LANGUAGES = [
   },
 ]
 
-async function translateText(targetText) {
-  require('dotenv').config();
-  const {TranslationServiceClient} = require('@google-cloud/translate');
+async function translateText() {
   const projectId = process.env.GCP_PROJECT_ID
   const location = 'global'
   const translationClient = new TranslationServiceClient();
+
+  // テキストファイルから翻訳対象となる日本語を読み込み
+  const fs = require("fs")
+  const fileTexts = fs.readFileSync("japaneseSource.txt", 'utf-8');
+  const targetText = fileTexts.split("\n").join(",")
+  console.log(targetText)
 
   LANGUAGES.forEach(async(lang) => {
     const request = {
       parent: `projects/${projectId}/locations/${location}`,
       contents: [targetText],
       mimeType: 'text/plain',
-      sourceLanguageCode: 'ja', //マジックナンバーに修正したい
+      sourceLanguageCode: 'ja', //マジックコメントに修正したい
       targetLanguageCode: lang.code,
     };
 
@@ -39,21 +46,9 @@ async function translateText(targetText) {
       const fs = require("fs")
       fs.writeFileSync(`./translateResult/${lang.label}_result.txt`, translation.translatedText)
     }
-    console.log(`${lang.label}語 書き込み完了`)
+    console.log(`${lang.label} 書き込み完了`)
   })
 }
 
-const inputPrompt = async () => {
-  const prompts = require("prompts");
-  let questions = {
-    type: "list",
-    name: "targetText",
-    message: "翻訳対象のテキストを入力してください"
-  };
-  const targetText =  await prompts(questions);
-
-  translateText(targetText.targetText);
-}
-
-inputPrompt()
+translateText()
 
