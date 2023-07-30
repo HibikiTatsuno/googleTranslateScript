@@ -1,22 +1,18 @@
 export const LANGUAGES = [
   {
-    language: "japanese",
-    code: "ja"
-  },
-  {
-    language: "english",
+    label: "english",
     code: "en"
   },
   {
-    language: "korea",
+    label: "korean",
     code: "ko"
   },
   {
-    language: "china_CN",
+    label: "china_CN",
     code: "zh-CN"
   },
   {
-    language: "china_TW",
+    label: "china_TW",
     code: "zh-TW"
   },
 ]
