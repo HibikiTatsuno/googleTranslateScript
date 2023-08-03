@@ -28,8 +28,7 @@ async function translateText() {
   // テキストファイルから翻訳対象となる日本語を読み込み
   const fs = require("fs")
   const fileTexts = fs.readFileSync("japaneseSource.txt", 'utf-8');
-  const targetText = fileTexts.split("\n")
-  console.log(targetText)
+  const targetText = fileTexts
 
   LANGUAGES.forEach(async(lang) => {
     const request = {
@@ -45,7 +44,6 @@ async function translateText() {
     const fs = require("fs")
 
     for (const translation of response.translations) {
-      console.log(lang.code)
       if (lang.code === "zh-CN"){
         fs.writeFileSync(`./translateResult/${lang.label}_中国語(簡体字)_result.txt`, translation.translatedText)
       }
