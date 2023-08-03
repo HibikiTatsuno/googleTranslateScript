@@ -28,7 +28,7 @@ async function translateText() {
   // テキストファイルから翻訳対象となる日本語を読み込み
   const fs = require("fs")
   const fileTexts = fs.readFileSync("japaneseSource.txt", 'utf-8');
-  const targetText = fileTexts.split("\n").join(",")
+  const targetText = fileTexts.split("\n")
   console.log(targetText)
 
   LANGUAGES.forEach(async(lang) => {
@@ -42,9 +42,19 @@ async function translateText() {
 
     const [response] = await translationClient.translateText(request);
 
+    const fs = require("fs")
+
     for (const translation of response.translations) {
-      const fs = require("fs")
-      fs.writeFileSync(`./translateResult/${lang.label}_result.txt`, translation.translatedText)
+      console.log(lang.code)
+      if (lang.code === "zh-CN"){
+        fs.writeFileSync(`./translateResult/${lang.label}_中国語(簡体字)_result.txt`, translation.translatedText)
+      }
+      else if (lang.code === "zh-TW") {
+        fs.writeFileSync(`./translateResult/${lang.label}_中国語(繁体字)_result.txt`, translation.translatedText)
+      }
+      else {
+        fs.writeFileSync(`./translateResult/${lang.label}_result.txt`, translation.translatedText)
+      }
     }
     console.log(`${lang.label} 書き込み完了`)
   })
